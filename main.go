@@ -9,6 +9,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/create", HandlePost)
+	mux.HandleFunc("/{shortUrl}", HandleRedirect)
 
 	server := http.Server{
 		Addr:    ":8080",

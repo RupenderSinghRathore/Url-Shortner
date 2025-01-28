@@ -7,6 +7,6 @@ import (
 
 func CreatShortUrl(longUrl string) string {
 	hash := md5.Sum([]byte(longUrl))
-	shortUrl := hash[:5]
-	return hex.EncodeToString(shortUrl)
+	shortUrl := hash[:]
+	return hex.EncodeToString(shortUrl)[:5]
 }

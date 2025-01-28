@@ -14,6 +14,8 @@ type resReq struct {
 	ShortUrl string `json:"shortUrl"`
 }
 
+var urlMap = make(map[string]string)
+
 func HandlePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
@@ -27,7 +29,10 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	urlCode := CreatShortUrl(jsonReq.Url)
-	resStruct := resReq{ShortUrl: urlCode}
+
+	urlMap[urlCode] = jsonReq.Url
+
+	resStruct := resReq{ShortUrl: "http://localhost:8080/" + urlCode}
 
 	if err := json.NewEncoder(w).Encode(resStruct); err != nil {
 		http.Error(w, "Couldn't provide responce", http.StatusInternalServerError)
@@ -40,4 +45,14 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Printf("Req completed for %v", ip)
+}
+
+func HandleRedirect(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path[1:]
+	url, ok := urlMap[path]
+	if !ok {
+		http.Error(w, "Url not found in logs", http.StatusBadRequest)
+	}
+
+	http.Redirect(w, r, url, http.StatusMovedPermanently)
 }
