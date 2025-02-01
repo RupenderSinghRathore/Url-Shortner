@@ -13,6 +13,10 @@ type postReq struct {
 type resReq struct {
 	ShortUrl string `json:"shortUrl"`
 }
+type mapStruct struct {
+	Url      string
+	ShortUrl string
+}
 
 var urlMap = make(map[string]string)
 
@@ -30,7 +34,11 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 
 	urlCode := CreatShortUrl(jsonReq.Url)
 
-	urlMap[urlCode] = jsonReq.Url
+	instMap := mapStruct{
+		Url:      jsonReq.Url,
+		ShortUrl: urlCode,
+	}
+	UpdateDb(instMap)
 
 	resStruct := resReq{ShortUrl: "http://localhost:8080/" + urlCode}
 
@@ -41,17 +49,18 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
-		log.Println("Couldn't get the ip address")
+		log.Println("Req complete but couldn't get the ip")
 		return
 	}
 	log.Printf("Req completed for %v", ip)
+
 }
 
 func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path[1:]
-	url, ok := urlMap[path]
-	if !ok {
-		http.Error(w, "Url not found in logs", http.StatusBadRequest)
+	url, err := RetriveDb(path)
+	if err != nil {
+		http.Error(w, "Unregistered URL", http.StatusBadRequest)
 	}
 
 	http.Redirect(w, r, url, http.StatusMovedPermanently)
