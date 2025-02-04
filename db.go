@@ -5,7 +5,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func UpdateDb(instMap mapStruct) error {
+func UpdateDb(url, urlCode string) error {
 	db, err := sql.Open("sqlite3", "/home/kami-sama/projects/urlShortnerApi/url.sql")
 	if err != nil {
 		return err
@@ -21,7 +21,7 @@ func UpdateDb(instMap mapStruct) error {
 		return err
 	}
 
-	_, err = db.Exec("INSERT OR IGNORE INTO users(url, shorturl) VALUES (?, ?)", instMap.Url, instMap.ShortUrl)
+	_, err = db.Exec("INSERT OR IGNORE INTO users(url, shorturl) VALUES (?, ?)", url, urlCode)
 	if err != nil {
 		return err
 	}

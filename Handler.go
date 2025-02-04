@@ -13,12 +13,7 @@ type postReq struct {
 type resReq struct {
 	ShortUrl string `json:"shortUrl"`
 }
-type mapStruct struct {
-	Url      string
-	ShortUrl string
-}
 
-var urlMap = make(map[string]string)
 
 func HandlePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -34,11 +29,7 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 
 	urlCode := CreatShortUrl(jsonReq.Url)
 
-	instMap := mapStruct{
-		Url:      jsonReq.Url,
-		ShortUrl: urlCode,
-	}
-	UpdateDb(instMap)
+	UpdateDb(jsonReq.Url, urlCode)
 
 	resStruct := resReq{ShortUrl: "http://localhost:8080/" + urlCode}
 
