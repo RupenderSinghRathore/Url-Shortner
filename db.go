@@ -7,7 +7,7 @@ import (
 )
 
 func UpdateDb(url, urlCode string) error {
-	db, err := sql.Open("sqlite3", "/home/kami-sama/lunaar/projects/urlShortnerApi/url.sql")
+	db, err := sql.Open("sqlite3", "./url.sql")
 	if err != nil {
 		return err
 	}
@@ -31,7 +31,7 @@ func UpdateDb(url, urlCode string) error {
 }
 
 func RetriveDb(code string) (string, error) {
-	db, err := sql.Open("sqlite3", "/home/kami-sama/lunaar/projects/urlShortnerApi/url.sql")
+	db, err := sql.Open("sqlite3", "./url.sql")
 	if err != nil {
 		return "", err
 	}
