@@ -8,6 +8,11 @@ import (
 func main() {
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("/", HandleHtml)
+
+	fs := http.FileServer(http.Dir("templates"))
+	mux.Handle("/templates/", http.StripPrefix("/templates/", fs))
+
 	mux.HandleFunc("/create", HandlePost)
 	mux.HandleFunc("/{shortUrl}", HandleRedirect)
 

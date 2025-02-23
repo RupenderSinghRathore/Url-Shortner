@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"text/template"
 )
 
 type postReq struct {
@@ -14,6 +15,13 @@ type resReq struct {
 	ShortUrl string `json:"shortUrl"`
 }
 
+func HandleHtml(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("templates/site.html")
+	if err != nil {
+		http.Error(w, "Error serving html", http.StatusInternalServerError)
+	}
+	t.Execute(w, nil)
+}
 
 func HandlePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -28,7 +36,6 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	urlCode := CreatShortUrl(jsonReq.Url)
-
 	UpdateDb(jsonReq.Url, urlCode)
 
 	resStruct := resReq{ShortUrl: "http://localhost:8080/" + urlCode}
@@ -46,7 +53,6 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Req completed for %v", ip)
 
 }
-
 func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path[1:]
 	url, err := RetriveDb(path)
