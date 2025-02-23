@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
@@ -17,14 +16,12 @@ func main() {
 	mux.HandleFunc("/create", HandlePost)
 	mux.HandleFunc("/{shortUrl}", HandleRedirect)
 
-	port := os.Getenv("PORT")
-
 	server := http.Server{
-		Addr:    "0.0.0.0:" + port,
+		Addr:    ":8080",
 		Handler: mux,
 	}
 
-	log.Println("Listening on port", port)
+	log.Println("Listening on port 8080")
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)
 	}

@@ -39,7 +39,7 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 	UpdateDb(jsonReq.Url, urlCode)
 
 	// TODO: use the domain name instead
-	resStruct := resReq{ShortUrl: "https://RupenderSinghRathore.github.io/resume/" + urlCode}
+	resStruct := resReq{ShortUrl: "http://localhost:8080/" + urlCode}
 
 	if err := json.NewEncoder(w).Encode(resStruct); err != nil {
 		http.Error(w, "Couldn't provide responce", http.StatusInternalServerError)
