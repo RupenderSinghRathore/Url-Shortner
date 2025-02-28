@@ -31,21 +31,6 @@
             <!-- The returned short URL will be rendered here -->
         </div>
     </div>
-    <!-- Optional: If you prefer custom handling of the JSON response -->
-    <script>
-        document.body.addEventListener("htmx:afterRequest", function (event) {
-            const xhr = event.detail.xhr;
-            const contentType = xhr.getResponseHeader("Content-Type") || "";
-            if (contentType.includes("application/json")) {
-                const data = JSON.parse(xhr.responseText);
-                if (data.shorturl) {
-                    document.getElementById("result").innerHTML = `
-              <p>Your short URL: <a href="${data.shorturl}" target="_blank">${data.shorturl}</a></p>
-            `;
-                }
-            }
-        });
-    </script>
 </body>
 
 </html>
